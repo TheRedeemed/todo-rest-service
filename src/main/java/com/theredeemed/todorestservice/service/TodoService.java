@@ -26,4 +26,20 @@ public class TodoService {
     public List<Todo> getAllTodos() {
         return todoList;
     }
+
+    public Todo deleteTodoyId(long id) {
+        Todo todo = findTodoById(id);
+
+        if (todo == null) return null;
+        if (todoList.remove(todo)) return todo;
+
+        return null;
+    }
+
+    private Todo findTodoById(long id) {
+        for (Todo todo : todoList) {
+            if(todo.getId() == id) return todo;
+        }
+        return null;
+    }
 }
