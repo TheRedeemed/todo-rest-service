@@ -27,6 +27,17 @@ public class TodoService {
         return todoList;
     }
 
+    public Todo save(Todo todo) {
+        if (todo.getId() == null) {
+            todo.setId((long) ++todoCounter);
+            todoList.add(todo);
+        } else {
+            deleteTodoyId(todo.getId());
+            todoList.add(todo);
+        }
+        return todo;
+    }
+
     public Todo deleteTodoyId(long id) {
         Todo todo = findTodoById(id);
 
@@ -36,7 +47,7 @@ public class TodoService {
         return null;
     }
 
-    private Todo findTodoById(long id) {
+    public Todo findTodoById(long id) {
         for (Todo todo : todoList) {
             if(todo.getId() == id) return todo;
         }
