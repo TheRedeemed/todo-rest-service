@@ -3,6 +3,7 @@ package com.theredeemed.todorestservice.controller;
 import com.theredeemed.todorestservice.model.Todo;
 import com.theredeemed.todorestservice.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,14 +14,38 @@ import java.util.List;
 public class TodoController {
 
     @Autowired
-    TodoService todoService;
+    private TodoService todoService;
 
     @GetMapping("/users/{username}/todos")
     public List<Todo> getTodos(@PathVariable String username) {
         return todoService.getAllTodos();
     }
 
-    @DeleteMapping("/users/{username}/todos/{id}")
+    @GetMapping("/users/{username}/todo/{id}")
+    public Todo getTodo(@PathVariable String username, @PathVariable long id) {
+        return todoService.findTodoById(id);
+    }
+
+    @PutMapping("/users/{username}/todo/{id}")
+    public ResponseEntity<Todo> updateTodo(@PathVariable String username, @PathVariable long id,
+                                           @RequestBody Todo todo) {
+        Todo updatedTodo = todoService.save(todo);
+        return new ResponseEntity<>(todo, HttpStatus.OK);
+    }
+
+    @PostMapping("/users/{username}/todo")
+    public ResponseEntity<Todo> createTodo(@PathVariable String username, @RequestBody Todo todo) {
+        Todo createdTodo = todoService.save(todo);
+
+        //Get current resource url
+//        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+//                                             .path("/{id}")
+//                                             .buildAndExpand(createdTodo.getId())
+//                                             .toUri();
+        return new ResponseEntity<>(createdTodo, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/users/{username}/todo/{id}")
     public ResponseEntity<Void> deleteTodoById(@PathVariable String username, @PathVariable long id) {
         Todo todo = todoService.deleteTodoyId(id);
 
