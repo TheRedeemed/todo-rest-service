@@ -1,4 +1,4 @@
-package com.theredeemed.todorestservice.basic.auth;
+package basic.auth;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
