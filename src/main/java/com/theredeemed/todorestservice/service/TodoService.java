@@ -1,6 +1,8 @@
 package com.theredeemed.todorestservice.service;
 
 import com.theredeemed.todorestservice.model.Todo;
+import com.theredeemed.todorestservice.repository.TodoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,6 +15,13 @@ public class TodoService {
     private static List<Todo> todoList = new ArrayList<>();
     private static int todoCounter = 0;
 
+    private TodoRepository todoRepository;
+
+    @Autowired
+    public TodoService(TodoRepository todoRepository) {
+        this.todoRepository = todoRepository;
+    }
+
     static {
         todoList.add(new Todo((long) ++todoCounter, "Abdoul", "Learn React", new Date(), false));
         todoList.add(new Todo((long) ++todoCounter, "Abdoul", "Learn css grid and flexblox", new Date(), false));
@@ -23,34 +32,32 @@ public class TodoService {
         todoList.add(new Todo((long) ++todoCounter, "Abdoul", "Learn Hibernate", new Date(), false));
     }
 
-    public List<Todo> getAllTodos() {
-        return todoList;
+    public List<Todo> getAllTodosByUsername(String username) {
+        return todoRepository.findAllByUsername(username);
     }
 
-    public Todo save(Todo todo) {
-        if (todo.getId() == null) {
-            todo.setId((long) ++todoCounter);
-            todoList.add(todo);
-        } else {
-            deleteTodoyId(todo.getId());
-            todoList.add(todo);
-        }
-        return todo;
+    public Todo saveOrUpdateTodo(Todo todo, String username) {
+//        if (todo.getId() == null) {
+//            todo.setId((long) ++todoCounter);
+//            todoList.add(todo);
+//        } else {
+//            deleteTodoyId(todo.getId());
+//            todoList.add(todo);
+//        }
+//        return todo;
+        todo.setUsername(username);
+        return todoRepository.save(todo);
     }
 
-    public Todo deleteTodoyId(long id) {
-        Todo todo = findTodoById(id);
-
-        if (todo == null) return null;
-        if (todoList.remove(todo)) return todo;
-
-        return null;
+    public void deleteTodoyId(long id) {
+//        Todo todo = findTodoById(id);
+//        if (todo == null) return null;
+//        if (todoList.remove(todo)) return todo;
+//        return null;
+        todoRepository.deleteById(id);
     }
 
     public Todo findTodoById(long id) {
-        for (Todo todo : todoList) {
-            if(todo.getId() == id) return todo;
-        }
-        return null;
+        return todoRepository.findById(id).get();
     }
 }

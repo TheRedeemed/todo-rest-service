@@ -1,12 +1,25 @@
 package com.theredeemed.todorestservice.model;
 
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
 public class Todo {
+
+    @Id
+    @GeneratedValue
     private Long id;
+
+    @Column(name = "USERNAME")
     private String username;
+
+    @Column(name = "DESCRIPTION")
     private String description;
+
+    @Column(name = "TARGET_DATE")
     private Date targetDate;
+
+    @Column(name = "IS_DONE")
     private boolean isDone;
 
     public Todo() {}
